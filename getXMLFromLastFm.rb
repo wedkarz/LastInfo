@@ -10,7 +10,7 @@ require 'json'
 api_key = '2d8dc0a751b42a8e4f6ca5aeb5c0c867' 
 
 # amount of top songs from each country
-limit = 500
+limit = 10
 
 # countries to be considered
 countries = ["poland", "spain", "malta", "croatia", "ukraine", "latvia", "saudi+arabia", "iraq", "japan", "china", "mexico", "canada", "ireland", "armenia", "south+africa", "czech+republic", "portugal", "switzerland", "finland", "norway", "sweden", "turkey", "australia", "united+states", "slovakia", "united+kingdom", "germany", "netherland", "france", "belgium", "russia"]

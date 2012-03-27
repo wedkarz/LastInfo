@@ -10,10 +10,12 @@ require 'json'
 api_key = '2d8dc0a751b42a8e4f6ca5aeb5c0c867' 
 
 # amount of top songs from each country
-limit = 100
+limit = 500
 
 # countries to be considered
 countries = ["poland", "spain", "malta", "croatia", "ukraine", "latvia", "saudi+arabia", "iraq", "japan", "china", "mexico", "canada", "ireland", "armenia", "south+africa", "czech+republic", "portugal", "switzerland", "finland", "norway", "sweden", "turkey", "australia", "united+states", "slovakia", "united+kingdom", "germany", "netherland", "france", "belgium", "russia"]
+
+#countries = ["poland"]
 
 ###
 
@@ -86,29 +88,29 @@ countries.each do |country|
 
     # get additional info from Last.fm api
 
-    similiar_artists = LastAPI::similiar_artists(mbid, 5, api_key)
-    artist_top_tags = LastAPI::artist_top_tags(mbid, api_key)
+    #similiar_artists = LastAPI::similiar_artists(mbid, 5, api_key)
+    #artist_top_tags = LastAPI::artist_top_tags(mbid, api_key)
     
     song = {
+      "_id" => "#{country_name}_#{ele.attributes["rank"]}",
       "country" => country_name,
       "rank" => ele.attributes["rank"],
       "name" => ele.elements["name"].text,
       "duration" => ele.elements["duration"].text,
       "listeners" => ele.elements["listeners"].text,
       "artist" => ele.elements["artist"].elements["name"].text,
-      "similiar_artists" => similiar_artists,
-      "top_tags" => artist_top_tags
+      #"similiar_artists" => similiar_artists,
+      #"top_tags" => artist_top_tags
     }
 
     songs << song
   end
-  puts ""
-  db = { "top_songs"  => songs }
+  db = { "docs"  => songs }
 end
 
 # write result to file
 
-file = File.new("lastFm.json", "w")
+file = File.new("lastFm5.json", "w")
 file.write(db.to_json)
 file.close
 

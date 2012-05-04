@@ -7,10 +7,11 @@ require 'rubygems'
 require 'json'
 require 'optparse'
 require 'ostruct'
-require 'tire'
+require 'mongo'
 require 'date'
+require 'couchrest'
 require 'logger'
-require 'rest_client'
+require "enumerator"
 
 ###############################################################
 # Settings - Option Parser
@@ -23,7 +24,7 @@ class OptParserLastFm
       opts.banner = "Użycie: #{$0} [OPCJE]"
       opts.separator ""
       opts.separator "------------------------------------------------------------------------------"
-      opts.separator " Skrypt zapisuje dane o piosenkach (LastFm) z pliku json do bazy ElasticSearch"
+      opts.separator " Skrypt zapisuje dane o piosenkach (LastFm) z pliku json do bazy MongoDb"
       opts.separator "------------------------------------------------------------------------------"
       opts.separator ""
 
@@ -36,8 +37,26 @@ class OptParserLastFm
       end
 
       #####################################################
-      # ElasticSearch options
+      # CouchDB options
 
+      options.couchport = 5984
+      opts.on("-i", "--couch-port PORT", "Port na którym uruchomiony jest CouchDB") do |port|
+        options.couchport = port
+      end
+      
+      options.couchdatabase = "last_info"
+      opts.on("-o", "--couch-db [NAME]", "Nazwa bazy danych (baza musi istnieć)") do |name|
+        options.couchdatabase = name
+      end
+      
+      options.couchhost = "localhost"
+      opts.on("-s", "--couch-host [HOST]", "Host Couch serwera") do |host|
+        options.couchhost = host
+      end
+      
+      #####################################################
+      # ElasticSearch options
+            
       options.elasticport = 9200
       opts.on("-p", "--elastic-port PORT", "Port na którym uruchomiony jest ElasticSearch") do |port|
         options.elasticport = port
@@ -52,7 +71,7 @@ class OptParserLastFm
       opts.on("-h", "--elastic-host [HOST]", "Host ElasticSearch serwera") do |host|
         options.elastichost = host
       end
-
+      
       opts.on_tail("-h", "--help", "wypisz pomoc") do
         puts opts
         exit
@@ -63,7 +82,7 @@ class OptParserLastFm
         options.verbose = true
       end
     end
-
+    
     @opts.parse!(args)
     options
   
@@ -80,13 +99,22 @@ logger.level = Logger::INFO  # default logging level
 ## Options
 options = OptParserLastFm.parse(ARGV)
 
-## Filename
-file = File.new(options.filename, "r")
-logger.info "Loading data from file #{options.filename} to index 'http://#{options.elastichost}:#{options.elasticport}/#{options.elasticindex}'"
+## Connecting to source
+logger.info "Connecting to CouchDb on http://#{options.couchhost}:#{options.couchport}/#{options.couchdatabase}"
+@inputDb = CouchRest.database("http://#{options.couchhost}:#{options.couchport}/#{options.couchdatabase}")
 
-parsed_file = JSON.parse(file.read)
+## Fetching data
+@allDocsWithMeta = @inputDb.all_docs :include_docs => true 
 
-parsed_file["songs"].each do |song|
+## Some cleanup
+@docs = []
+@allDocsWithMeta['rows'].each do |row|
+  @docs << row['doc']
+end
+
+## insterting data
+logger.info "Updating ElasticSearch indexes on http://#{options.elastichost}:#{options.elasticport}/#{options.elasticindex}"
+@docs.each do |song|
   id = song['_id'].gsub(/\s+/, "+")
   song.delete('_id')
   RestClient.put "http://#{options.elastichost}:#{options.elasticport}/#{options.elasticindex}/song/#{id}", song.to_json, :content_type => :json

@@ -1,0 +1,40 @@
+  Bazy NoSQL
+===============
+
+* Dane pochodzœô ¥ z serwisu LastFm (lastfm.pl) i zawierajœô ¥ informacje o zadanej liczbie najpopularniejszych piosenek w kilkunastu krajach.
+   
+   * Przykœô âadowe dane znajdujœô ¥ siœô ¹ w folderze jsons
+
+   * Moœô¡¼na teœô¡¼ pobraœô § aktualne dane korzystajœô ¥c ze skryptu ./getJSONFromLastFm.rb (i API Lastfm). Przykœô âad:
+      
+      `./getJSONFromLastFm.rb -f temp.json -l 100 -c Poland,Ukraine`
+
+      Parametry: 
+                 *-f* nazwa pliku docelowego (domyœô ûlnie temp.json)
+                 *-l* iloœô ûœô § topwych piosenek z kaœô¡¼dego kraju (domyœô ûlnie 10)
+                 *-c* lista krajów
+
+      Wszelkie parametry sœô ¥ opcjonalne (posiadajœô ¥ wartoœô ûci domyœô ûlne).
+
+
+2. Aby zapisaœô § dane w którejkolwiek z baz Mongodb, CouchDb lub ElasticSearch naleœô¡¼y uruchomiœô § odpowiedni skrypt:
+   
+   * `./fileToMongo.rb`
+
+   * `./fileToCouch.rb`
+
+   * `./fileToElastic.rb`
+
+   Przykœô âadowe wywoœô âania:
+
+   `./fileToCouch.rb -f temp.json`
+
+   `./fileToMongo.rb -f temp.json`
+
+   `./fileToElastic.rb -f temp.json`
+
+   Parametry baz danych (host, port, nazwa bazy/kolekcji) moœô¡¼na ustawiœô § przy pomocy odpowiednich przeœô âœô ¥czników. kaœô¡¼dy skrypt posiada przeœô âœô ¥cznik -h z krótkœô ¥ pomocœô ¥.
+
+
+3. Aby przenieœô ûœô § dane z jednej bazy do drugiej wystarczy posœô âuœô¡¼yœô § siœô ¹ skryptami: `[mongo|couch]To[mongo|couch|elastic].rb` (baza œô¡ºródœô âowa i docelowa muszœô ¥ byœô § inne).
+   Podobnie jak wyœô¡¼ej dostœô ¹pna jest pomoc.

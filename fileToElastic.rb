@@ -49,7 +49,7 @@ class OptParserLastFm
       end
       
       options.elastichost = "localhost"
-      opts.on("-h", "--elastic-host [HOST]", "Host ElasticSearch serwera") do |host|
+      opts.on("-a", "--elastic-host [HOST]", "Host ElasticSearch serwera") do |host|
         options.elastichost = host
       end
 

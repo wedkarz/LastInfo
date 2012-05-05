@@ -35,20 +35,20 @@ class OptParserLastFm
       end
 
       #####################################################
-      # CouchDB options
+      # Mongodb options
 
       options.mongoport = 27017
-      opts.on("-p", "--couch-port PORT", "Port na którym uruchomiony jest MongoDb") do |port|
+      opts.on("-p", "--mongo-port PORT", "Port na którym uruchomiony jest MongoDb") do |port|
         options.mongoport = port
       end
       
       options.mongodatabase = "last_info"
-      opts.on("-d", "--couch-db [NAME]", "Nazwa bazy danych") do |name|
+      opts.on("-d", "--mongo-db [NAME]", "Nazwa bazy danych") do |name|
         options.mongodatabase = name
       end
       
       options.mongohost = "localhost"
-      opts.on("-h", "--couch-host [HOST]", "Host Mongo serwera") do |host|
+      opts.on("-a", "--mongo-host [HOST]", "Host Mongo serwera") do |host|
         options.mongohost = host
       end
 

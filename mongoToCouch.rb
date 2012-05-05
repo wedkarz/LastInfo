@@ -8,10 +8,9 @@ require 'json'
 require 'optparse'
 require 'ostruct'
 require 'mongo'
-require 'date'
 require 'couchrest'
+require 'date'
 require 'logger'
-require "enumerator"
 
 ###############################################################
 # Settings - Option Parser
@@ -24,52 +23,44 @@ class OptParserLastFm
       opts.banner = "Użycie: #{$0} [OPCJE]"
       opts.separator ""
       opts.separator "------------------------------------------------------------------------------"
-      opts.separator " Skrypt zapisuje dane o piosenkach (LastFm) z pliku json do bazy MongoDb"
+      opts.separator " Skrypt przenosi dane z MongoDb do CouchDb"
       opts.separator "------------------------------------------------------------------------------"
       opts.separator ""
 
       #####################################################
-      # Datasource options      
-
-      options.filename = 'temp.json'
-      opts.on("-f", "--filename [FILENAME]", "Nazwa pliku przechowującego jsona") do |filename|
-        options.filename = filename
-      end
-
-      #####################################################
-      # CouchDB options
-
-      options.couchport = 5984
-      opts.on("-i", "--couch-port PORT", "Port na którym uruchomiony jest CouchDB") do |port|
-        options.couchport = port
-      end
-      
-      options.couchdatabase = "last_info"
-      opts.on("-o", "--couch-db [NAME]", "Nazwa bazy danych (baza musi istnieć)") do |name|
-        options.couchdatabase = name
-      end
-      
-      options.couchhost = "localhost"
-      opts.on("-s", "--couch-host [HOST]", "Host Couch serwera") do |host|
-        options.couchhost = host
-      end
-      
-      #####################################################
       # Mongodb options
-            
+
       options.mongoport = 27017
-      opts.on("-p", "--mongo-port PORT", "Port na którym uruchomiony jest MongoDb") do |port|
+      opts.on("-i", "--mongo-port PORT", "Port na którym uruchomiony jest MongoDb") do |port|
         options.mongoport = port
       end
       
       options.mongodatabase = "last_info"
-      opts.on("-d", "--mongo-db [NAME]", "Nazwa bazy danych") do |name|
+      opts.on("-o", "--mongo-db [NAME]", "Nazwa bazy danych") do |name|
         options.mongodatabase = name
       end
       
       options.mongohost = "localhost"
-      opts.on("-a", "--mongo-host [HOST]", "Host Mongo serwera") do |host|
+      opts.on("-s", "--mongo-host [HOST]", "Host Mongo serwera") do |host|
         options.mongohost = host
+      end
+      
+      #####################################################
+      # CouchDB options
+
+      options.couchport = 5984
+      opts.on("-p", "--couch-port PORT", "Port na którym uruchomiony jest CouchDB") do |port|
+        options.couchport = port
+      end
+      
+      options.couchdatabase = "last_info"
+      opts.on("-d", "--couch-db [NAME]", "Nazwa bazy danych (baza musi istnieć)") do |name|
+        options.couchdatabase = name
+      end
+      
+      options.couchhost = "localhost"
+      opts.on("-a", "--couch-host [HOST]", "Host Couch serwera") do |host|
+        options.couchhost = host
       end
 
       opts.on_tail("-h", "--help", "wypisz pomoc") do
@@ -98,26 +89,22 @@ logger.level = Logger::INFO  # default logging level
 ## Options
 options = OptParserLastFm.parse(ARGV)
 
-## Connecting to source
-logger.info "Connecting to CouchDb on http://#{options.couchhost}:#{options.couchport}/#{options.couchdatabase}"
-@inputDb = CouchRest.database("http://#{options.couchhost}:#{options.couchport}/#{options.couchdatabase}")
-
-## Fetching data
-@allDocsWithMeta = @inputDb.all_docs :include_docs => true 
-
-## Some cleanup
-@docs = []
-@allDocsWithMeta['rows'].each do |row|
-  @docs << row['doc']
-end
-
-## Connecting to destination db
+## Connecting to source database
 logger.info "Connecting to MongoDb on http://#{options.mongohost}:#{options.mongoport}/#{options.mongodatabase}"
 @connection = Mongo::Connection.new("#{options.mongohost}", options.mongoport)
 @db = @connection.db("#{options.mongodatabase}")
 @collection = @db["#{options.mongodatabase}"]
 
-## insterting data
-logger.info "Updating Mongo database result set"
-@collection.insert(@docs)
+## Obtaining data
+logger.info "Getting source data from Mongo"
+@sourceSet = @collection.find.to_a
+
+## Connecting to destinantion database
+logger.info "Connecting to CouchDb on http://#{options.couchhost}:#{options.couchport}/#{options.couchdatabase}"
+@outputDb = CouchRest.database!("http://#{options.couchhost}:#{options.couchport}/#{options.couchdatabase}")
+
+## Migrating data to CouchDb
+logger.info "Migrating data to CouchDb"
+@outputDb.bulk_save(@sourceSet)
+
 logger.info "Done."

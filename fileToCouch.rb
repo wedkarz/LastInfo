@@ -48,7 +48,7 @@ class OptParserLastFm
       end
       
       options.couchhost = "localhost"
-      opts.on("-h", "--couch-host [HOST]", "Host Couch serwera") do |host|
+      opts.on("-a", "--couch-host [HOST]", "Host Couch serwera") do |host|
         options.couchhost = host
       end
 

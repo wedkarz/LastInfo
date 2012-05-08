@@ -28,3 +28,7 @@
 
 3. Aby przenieść dane z jednej bazy do drugiej wystarczy posłużyć się skryptami: `[mongo|couch]To[mongo|couch|elastic].rb` (baza źródłowa i docelowa muszą być inne).
    Podobnie jak wyżej dostępna jest pomoc.
+
+4. TODO: 
+  * Map Reduce
+  * Wizualizacja danych

@@ -16,15 +16,7 @@
 
       Wszelkie parametry są opcjonalne (posiadają wartości domyślne).
 
-2. Aby zapisać dane w którejkolwiek z baz Mongodb, CouchDb lub ElasticSearch należy uruchomić odpowiedni skrypt:
-   
-   * `./fileToMongo.rb`
-
-   * `./fileToCouch.rb`
-
-   * `./fileToElastic.rb`
-
-   Przykładowe wywołania:
+2. Aby zapisać dane w którejkolwiek z baz Mongodb, CouchDb lub ElasticSearch należy uruchomić odpowiedni skrypt (`-f` to ścieżka do pliku .json):
 
    `./fileToCouch.rb -f temp.json`
 

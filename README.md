@@ -123,11 +123,11 @@ Aby odpalić aplikację przechodzimy do katalogu `visualizationApp` i standardow
 
 i cieszymy się widokiem aplikacji pod adresem `localhost:3000`.
 
-### 6. TODO?
-4. TODO: 
+### 6. Future work
   * z braku czasu i motywacji nie używalem w aplikacji wizualizującej gemu 'tire', toteż celem uporządkowania warto będzie do niego jeszcze sięgnąć,
   * można rozszerzyć i sparametryzować aplikację tak by użytkownik mógl jak najlepiej dostosować zapytanie do potrzeb i ciekawości,
   * chętnie przyjrzę się także bibliotece d3.js, żeby troszeczkę wizualizację zdynamizować i urozmaicić.
+  * dodać rozklad logarytmiczny do wizualizacji, by lepiej obserwować różnice międy krajami.
 
 ### Credits
 

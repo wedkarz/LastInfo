@@ -141,10 +141,10 @@ options.countries.each do |country|
     song = {
       "_id" => "#{Date.today}_#{country_name}_#{ele.attributes["rank"]}",
       "country" => country_name,
-      "rank" => ele.attributes["rank"],
+      "rank" => Integer(ele.attributes["rank"]),
       "name" => ele.elements["name"].text,
-      "duration" => ele.elements["duration"].text,
-      "listeners" => ele.elements["listeners"].text,
+      "duration" => Integer(ele.elements["duration"].text),
+      "listeners" => Integer(ele.elements["listeners"].text),
       "artist" => ele.elements["artist"].elements["name"].text,
       #"similiar_artists" => similiar_artists,
       #"top_tags" => artist_top_tags

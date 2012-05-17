@@ -43,7 +43,7 @@ class OptParserLastFm
         options.elasticport = port
       end
       
-      options.elasticindex = "last_info"
+      options.elasticindex = "songs"
       opts.on("-d", "--elastic-db [NAME]", "Nazwa bazy danych") do |name|
         options.elasticindex = name
       end

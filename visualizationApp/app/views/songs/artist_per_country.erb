@@ -1,0 +1,44 @@
+<h2><%= params['artist'].gsub('+',' ') %></h2>
+
+<div id='map_canvas'></div>
+
+<script type='text/javascript'>
+google.load('visualization', '1', {packages: ['geomap']});
+
+ $(function() {
+	$.getJSON(window.location.pathname + '.json', function(data) {
+		// setup the new map and its variables
+
+        var map = new google.visualization.DataTable();
+            map.addRows(data.length);  // length gives us the number of results in our returned data
+            map.addColumn('string', 'Państwo');
+        map.addColumn('number', 'Odsłuchania');
+
+        // now we need to build the map data, loop over each result
+        $.each(data, function(i,v) {
+            // set the values for both the name and the population
+            map.setValue(i, 0, v.country);
+            map.setValue(i, 1, v.total);
+        });
+        // finally, create the map!
+		var options = {};
+		    options['dataMode'] = 'regions';
+			options['region'] = 'world';
+			// options['showZoomOut'] = true;
+			// options['zoomOutLabel'] = 'Świat';
+			
+			
+		
+        var geomap = new google.visualization.GeoMap(
+          document.getElementById('map_canvas'));
+             geomap.draw(map, options);
+
+			// handle events
+			google.visualization.events.addListener(geomap, 'zoomOut', function(e) {
+				options['region'] = 'world';
+				options['showZoomOut'] = false;
+             	geomap.draw(map, options);				
+			});
+	});
+});
+  </script>

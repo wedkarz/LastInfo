@@ -1,0 +1,18 @@
+<h1>Artist per country</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Artist</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @wynik.each do |song| %>
+      <tr>
+        <td><%= song['country'] %></td>
+        <td><%= song['total'] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

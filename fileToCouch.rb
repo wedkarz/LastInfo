@@ -42,7 +42,7 @@ class OptParserLastFm
         options.couchport = port
       end
       
-      options.couchdatabase = "last_info"
+      options.couchdatabase = "songs"
       opts.on("-d", "--couch-db [NAME]", "Nazwa bazy danych (baza musi istnieć)") do |name|
         options.couchdatabase = name
       end

@@ -35,7 +35,7 @@ class OptParserLastFm
         options.mongoport = port
       end
       
-      options.mongodatabase = "last_info"
+      options.mongodatabase = "songs"
       opts.on("-o", "--mongo-db [NAME]", "Nazwa bazy danych") do |name|
         options.mongodatabase = name
       end
@@ -53,7 +53,7 @@ class OptParserLastFm
         options.elasticport = port
       end
       
-      options.elasticindex = "last_info"
+      options.elasticindex = "songs"
       opts.on("-d", "--elastic-db [NAME]", "Nazwa bazy danych") do |name|
         options.elasticindex = name
       end

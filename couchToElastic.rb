@@ -117,6 +117,7 @@ logger.info "Updating ElasticSearch indexes on http://#{options.elastichost}:#{o
 @docs.each do |song|
   id = song['_id'].gsub(/\s+/, "+")
   song.delete('_id')
+  
   RestClient.put "http://#{options.elastichost}:#{options.elasticport}/#{options.elasticindex}/song/#{id}", song.to_json, :content_type => :json
   if options.verbose
     logger.info "Added #{id}"

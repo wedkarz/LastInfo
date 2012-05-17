@@ -52,7 +52,7 @@
 			<% if (params['artist'] == artist['artist'].to_uri) %>
 			<strong>
 			<% end %>
-			<%= link_to artist['artist'], controller: "songs", action: "artist_per_country", artist: artist['artist'].to_uri %></td>
+			<%= link_to artist['artist'], controller: "songs", action: "artist_per_country", artist: artist['artist'] %></td>
 			<% if (params['artist'] == artist['artist'].to_uri) %>
 			</strong>
 			<% end %>

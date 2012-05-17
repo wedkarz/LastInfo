@@ -6,7 +6,7 @@ curl 'localhost:9200/songs/_search?pretty=true' -d '
 	    "all_artists" : {
 	        "terms" : {
 				"field": "artist",
-				"size": 100
+				"size": 50
 	        }
 	    }
     }

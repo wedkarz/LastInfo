@@ -34,7 +34,7 @@ class OptParserLastFm
         options.topSongsLimit = n
       end
 
-      options.countries = ["poland", "spain", "malta", "croatia", "ukraine", "latvia", "saudi+arabia", "iraq", "japan", "china", "mexico", "canada", "ireland", "armenia", "south+africa", "czech+republic", "portugal", "switzerland", "finland", "norway", "sweden", "turkey", "australia", "united+states", "slovakia", "united+kingdom", "germany", "netherland", "france", "belgium", "russia"]
+      options.countries = ["poland", "italy", "mexico", "spain", "malta", "croatia", "ukraine", "latvia", "saudi+arabia", "iraq", "japan", "mongolia", "china", "mexico", "canada", "ireland", "armenia", "south+africa", "czech+republic", "portugal", "switzerland", "finland", "norway", "sweden", "turkey", "australia", "united+states", "slovakia", "united+kingdom", "germany", "netherland", "france", "belgium", "russia", "brazil", "argentina", "india"]
       opts.on("-c", "--countries COUNTRIES", Array, "Państwa o których informacje chcemy uzyskać") do |countries|
         options.countries = countries
       end
@@ -141,10 +141,10 @@ options.countries.each do |country|
     song = {
       "_id" => "#{Date.today}_#{country_name}_#{ele.attributes["rank"]}",
       "country" => country_name,
-      "rank" => Integer(ele.attributes["rank"]),
+      "rank" => ele.attributes["rank"].to_i,
       "name" => ele.elements["name"].text,
-      "duration" => Integer(ele.elements["duration"].text),
-      "listeners" => Integer(ele.elements["listeners"].text),
+      "duration" => ele.elements["duration"].text.to_i,
+      "listeners" => ele.elements["listeners"].text.to_i,
       "artist" => ele.elements["artist"].elements["name"].text,
       #"similiar_artists" => similiar_artists,
       #"top_tags" => artist_top_tags

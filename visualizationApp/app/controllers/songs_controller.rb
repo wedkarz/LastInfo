@@ -10,18 +10,25 @@ class SongsController < ApplicationController
   def artist_per_country
     @all_artists = SongsController::all_artists
     
-    @facet = '{
-    "facets" : {
-      "artist_per_country" : {
-        "terms_stats" : {
-          "size": 0,
-          "key_field" : "country",
-          "value_field": "listeners"
-        }
-      }
+    @facet = '
+    {
+    	"query": {
+    		"term": {
+    			"artist": "' << params['artist'] << '"
+    		}
+    	},
+    	"facets" : {
+    		"artist_per_country" : {
+    			"terms_stats" : {
+    				"size": 0,
+    				"key_field" : "country",
+    				"value_field": "listeners"
+    			}
+    		}
+    	}
     }
-    }'
-    @songs = RestClient.post "localhost:9200/songs/_search?pretty=true&q=artist:#{params['artist']}", @facet, content_type: :json 
+    '
+    @songs = RestClient.post "localhost:9200/songs/_search?pretty=true", @facet, content_type: :json 
 
     @wynik = []
     JSON.parse(@songs)['facets']['artist_per_country']['terms'].each do |term|

@@ -1,6 +1,8 @@
-<h2><%= params['artist'].gsub('+',' ') %></h2>
+<center><h2 class="artist_name"><%= params['artist'].gsub('+',' ') %></h2>
 
-<div id='map_canvas'></div>
+	
+	<hr />
+	<div id='map_canvas'></div></center>
 
 <script type='text/javascript'>
 google.load('visualization', '1', {packages: ['geomap']});
